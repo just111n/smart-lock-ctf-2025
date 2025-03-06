@@ -89,23 +89,32 @@ async def fuzz_smartlock():
         #print("\n[3] Sending different combinations of initial commands...")
         #await send_commands(ble, command_sequence)
         print("\n[3] trying infite loop...")
-        for i in range(10):
-            # res = await ble.write_command(VALID_PASSCODE + AUTH)
-            # res = await ble.write_command(OPEN + AUTH)
-            # res = await ble.write_command(CLOSE+ AUTH)
-            # res = await ble.write_command(CLOSE)
-            # res = await ble.write_command(OPEN)
 
-            # res = await ble.write_command(AUTH + CLOSE)
-
-            # res = await ble.write_command(AUTH + OPEN)
-            res = await ble.write_command(OPEN)
-            res = await ble.write_command(AUTH )
-
+        try:
             for i in range(10):
+            
+                res = await ble.write_command(VALID_PASSCODE + AUTH)
+                res = await ble.write_command(OPEN + AUTH)
+                res = await ble.write_command(CLOSE+ AUTH)
                 res = await ble.write_command(CLOSE)
                 res = await ble.write_command(OPEN)
+
+                res = await ble.write_command(AUTH + CLOSE)
+
+                res = await ble.write_command(AUTH + OPEN)
+                res = await ble.write_command(OPEN)
+                res = await ble.write_command(AUTH )
+
+                for i in range(10):
+                    res = await ble.write_command(CLOSE)
+                    res = await ble.write_command(OPEN)
             
+        except:
+            print("Error")
+        
+            
+            
+
 
             
             

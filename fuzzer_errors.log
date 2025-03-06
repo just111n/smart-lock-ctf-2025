@@ -1,0 +1,74 @@
+
+[STARTUP] Last Log: No previous logs
+
+[STARTUP] Last Log: [STARTUP] Last Log: No previous logs
+
+2025-03-06 16:39:33,435 - ERROR - Fuzzer crashed with error: [WinError -2147023673] The operation was canceled by the user
+Traceback (most recent call last):
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\smart.py", line 103, in fuzz_smartlock
+    res = await ble.write_command(AUTH )
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 42, in write_command
+    res = await self.read_command()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 47, in read_command
+    res = await self.client.read_gatt_char(self.COMMAND_ADDR)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\__init__.py", line 721, in read_gatt_char
+    return await self._backend.read_gatt_char(char_specifier, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\backends\winrt\client.py", line 834, in read_gatt_char
+    await characteristic.obj.read_value_async(
+OSError: [WinError -2147023673] The operation was canceled by the user
+
+[STARTUP] Last Log: OSError: [WinError -2147023673] The operation was canceled by the user
+
+2025-03-06 16:46:34,861 - ERROR - Fuzzer crashed with error: [WinError -2147023673] The operation was canceled by the user
+Traceback (most recent call last):
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\smart.py", line 103, in fuzz_smartlock
+    res = await ble.write_command(AUTH )
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 42, in write_command
+    res = await self.read_command()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 47, in read_command
+    res = await self.client.read_gatt_char(self.COMMAND_ADDR)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\__init__.py", line 721, in read_gatt_char
+    return await self._backend.read_gatt_char(char_specifier, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\backends\winrt\client.py", line 834, in read_gatt_char
+    await characteristic.obj.read_value_async(
+OSError: [WinError -2147023673] The operation was canceled by the user
+
+[STARTUP] Last Log: OSError: [WinError -2147023673] The operation was canceled by the user
+
+2025-03-06 16:48:08,524 - ERROR - Fuzzer crashed with error: [WinError -2147023673] The operation was canceled by the user
+Traceback (most recent call last):
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\smart.py", line 103, in fuzz_smartlock
+    res = await ble.write_command(AUTH )
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 42, in write_command
+    res = await self.read_command()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py", line 47, in read_command
+    res = await self.client.read_gatt_char(self.COMMAND_ADDR)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\__init__.py", line 721, in read_gatt_char
+    return await self._backend.read_gatt_char(char_specifier, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\site-packages\bleak\backends\winrt\client.py", line 834, in read_gatt_char
+    await characteristic.obj.read_value_async(
+OSError: [WinError -2147023673] The operation was canceled by the user
+2025-03-06 16:48:47,200 - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py:92> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\asyncio\tasks.py:767]>
+
+[STARTUP] Last Log: task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py:92> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\asyncio\tasks.py:767]>
+
+2025-03-06 16:49:15,380 - ERROR - Last Log: [State] Device state: Authenticated
+2025-03-06 16:51:41,537 - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py:92> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\asyncio\tasks.py:767]>
+
+[STARTUP] Last Log: task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py:92> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\asyncio\tasks.py:767]>
+
+2025-03-06 16:51:55,875 - ERROR - Last Log: [State] Lock mechanism open
