@@ -72,3 +72,10 @@ task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running 
 [STARTUP] Last Log: task: <Task cancelling name='Task-2' coro=<BLEClient._serialport_task() running at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\BLEClient.py:92> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\RAMMUS\Downloads\smart-lock-ctf-2025\venv\Lib\asyncio\tasks.py:767]>
 
 2025-03-06 16:51:55,875 - ERROR - Last Log: [State] Lock mechanism open
+
+[STARTUP] Last Log: 2025-03-06 16:51:55,875 - ERROR - Last Log: [State] Lock mechanism open
+
+2025-03-06 17:06:07,108 - ERROR - Last Log: [State] Lock mechanism open
+
+[STARTUP] Last Log: 2025-03-06 17:06:07,108 - ERROR - Last Log: [State] Lock mechanism open
+
