@@ -1,5 +1,5 @@
 # main_ble_fuzzer.py
-
+import logging
 import asyncio
 import random
 import hashlib
@@ -8,6 +8,13 @@ import os
 from BLEClient import BLEClient
 from ble_mutator import mutate_command
 from ble_oracle import is_crash, is_interesting
+
+# Configure logging
+logging.basicConfig(
+    filename="fuzzer_errors.log",
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 DEVICE_NAME = "Smart Lock [Group 7]"
 
@@ -68,4 +75,11 @@ async def fuzz_loop():
         await ble.disconnect()
 
 if __name__ == "__main__":
-    asyncio.run(fuzz_loop())
+    try:
+        asyncio.run(fuzz_loop())  # Run the fuzzer
+    except KeyboardInterrupt:
+        print("\nProgram Exited by User!")
+    except Exception as e:
+        logging.error("Unhandled error: %s", str(e), exc_info=True)
+        logging.getLogger().handlers[0].flush()  # Force log flush
+        print("\n[!] Fatal error! Check fuzzer_errors.log.")
