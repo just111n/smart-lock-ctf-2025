@@ -21,4 +21,6 @@ def mutate_command(command_bytes):
         i, j = random.sample(range(len(mutated)), 2)
         mutated[i], mutated[j] = mutated[j], mutated[i]
 
+    # print("Mutation type:", mutation_type)
+
     return bytes(mutated)
