@@ -31,13 +31,25 @@ async def example_control_smartlock():
     await asyncio.sleep(2)
 
     print("\n[3] Opening")
-    res = await ble.write_command([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x93]
+#     res = await ble.write_command([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x93]
                                   
-)
+# )
 #     res = await ble.write_command([0x01, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]
 
                                   
 # )
+    res = await ble.write_command([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0xB0]
+
+
+
+
+
+
+
+
+                             
+    )
+
     await asyncio.sleep(2)
 
     

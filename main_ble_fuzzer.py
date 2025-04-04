@@ -11,7 +11,7 @@ from BLEClient import BLEClient
 from ble_mutator import mutate_command
 from ble_oracle import is_crash, is_interesting
 from UserInterface import ShowUserInterface
-from utils import generate_invalid_commands
+from utils import generate_invalid_commands, load_existing_crash_hashes
 
 DEVICE_NAME = "Smart Lock [Group 7]"
 
@@ -73,6 +73,13 @@ async def fuzz_loop():
     print(f"[1] Connecting to '{DEVICE_NAME}'...")
     await ble.connect(DEVICE_NAME)
 
+    # print("\n[2] Authenticating...")
+    # res = await ble.write_command(AUTH + PASSCODE)
+    # if res[0] != 0:
+    #     print(f"[X] Failure: Wrong Passcode.")
+    #     await ble.disconnect()
+    #     return
+
     print("[2] Seeding commands (unauthenticated + authenticated)...")
     # AUTH seeds to test login fuzzing
     auth_variants = [AUTH + PASSCODE] + generate_invalid_commands()
@@ -88,6 +95,16 @@ async def fuzz_loop():
     for seed in post_auth_seeds:
         heapq.heappush(queue, (-1.0, seed))
 
+    crash_hashes = load_existing_crash_hashes()
+    for seed in post_auth_seeds:
+        hex_list = [f"0x{byte:02X}" for byte in seed]
+        normalized = "".join(hex_list).replace("0x", "").lower()
+        if hashlib.md5(normalized.encode()).hexdigest() in crash_hashes:
+            continue  # Skip known crash-inducing inputs
+        heapq.heappush(queue, (-1.0, seed))
+
+
+
     try:
         while queue:
             _, cmd = heapq.heappop(queue)
@@ -97,10 +114,12 @@ async def fuzz_loop():
                 mutated = mutate_command(cmd[:])
 
                 # Reset and reconnect for every run to simulate cold start
-                await ble.disconnect()
-                await asyncio.sleep(1)
-                await ble.connect(DEVICE_NAME)
-                await asyncio.sleep(1)
+                # await ble.disconnect()
+                # await asyncio.sleep(1)
+                # await ble.connect(DEVICE_NAME)
+                
+                await asyncio.sleep(2)
+
 
                 print(f"\n[>] Testing: {[hex(b) for b in mutated]}")
                 await fuzz_once(ble, mutated)
