@@ -67,7 +67,7 @@ def create_seed_from_command(data: List[List[int]], note: str = "") -> Seed:
     path_hash = hashlib.sha256(flat_bytes).hexdigest()
 
     return Seed(
-        priority=1.0,
+        priority=0.1,
         energy=1.0,
         data=data,
         path_hash=path_hash,

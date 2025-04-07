@@ -1,2 +1,2 @@
 @REM Start Smartlock GUI demo
-.\venv\python main_ble_fuzzer.py %1
+.\venv\python justin_fuzzer.py %1
