@@ -23,77 +23,43 @@ OPEN = [0x01]
 CLOSE = [0x02]
 DEFAULT_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]  # Default passcode
 
+WRONG_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07] # Wrong passcode
+
 # Define interesting test scenarios
-SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
-
-    # # SPECIAL
-    [[0xAA,0xAA]],
-
-    # Edge cases exploration
-    [[0x00]],  # AUTH without passcode
-    [[0x03]],  # Unknown command (off-by-one from CLOSE)
-    [[0xFF]],  # Invalid command (maximum value)
-    [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
-
-    
-
-    # Locked
-    [AUTH + DEFAULT_PASSCODE],
-    [CLOSE], 
-    
-
-    # TODO: Authenticating
-
-    # Authenticated
-    [AUTH + DEFAULT_PASSCODE,OPEN],
-    [AUTH + DEFAULT_PASSCODE,CLOSE],
-
-    # TODO: Opening
-
-    # TODO: Unlocked
-    [AUTH + DEFAULT_PASSCODE,OPEN,OPEN],
-    [AUTH + DEFAULT_PASSCODE,OPEN,CLOSE],
-
-    # # # TODO: Closing
-
-    
-
-    # Basic protocol tests
-    [AUTH + DEFAULT_PASSCODE],  # Valid authentication
-    [OPEN],                     # Open command
-    [CLOSE],                    # Close command
-    
-    # State transition sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
-    [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
-    
-    # Command sequences in a single frame
-    [OPEN , CLOSE],            # Open then Close
-    [CLOSE , OPEN],            # Close then Open
-    [OPEN , OPEN],             # Open twice
-    [CLOSE , CLOSE],           # Close twice
-    
-    # Complex state transition sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
-    [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
-    
-    # Double authentication scenarios (potential bugs)
-    [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
-    
-    # Full sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
-    
-    # Edge cases exploration
-    [[0x00]],  # AUTH without passcode
-    [[0x03]],  # Unknown command (off-by-one from CLOSE)
-    [[0xFF]],  # Invalid command (maximum value)
-    [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
-]
 # SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
 #     # # SPECIAL
-#     # [[0xAA,0xAA]],
+#     [[0xAA,0xAA]],
+
+#     # Edge cases exploration
+#     [[0x00]],  # AUTH without passcode
+#     [[0x03]],  # Unknown command (off-by-one from CLOSE)
+#     [[0xFF]],  # Invalid command (maximum value)
+#     [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
+
     
+
+#     # Locked
+#     [AUTH + DEFAULT_PASSCODE],
+#     [CLOSE], 
+    
+
+#     # TODO: Authenticating
+
+#     # Authenticated
+#     [AUTH + DEFAULT_PASSCODE,OPEN],
+#     [AUTH + DEFAULT_PASSCODE,CLOSE],
+
+#     # TODO: Opening
+
+#     # TODO: Unlocked
+#     [AUTH + DEFAULT_PASSCODE,OPEN,OPEN],
+#     [AUTH + DEFAULT_PASSCODE,OPEN,CLOSE],
+
+#     # # # TODO: Closing
+
+    
+
 #     # Basic protocol tests
 #     [AUTH + DEFAULT_PASSCODE],  # Valid authentication
 #     [OPEN],                     # Open command
@@ -120,11 +86,79 @@ SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 #     [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
     
 #     # Edge cases exploration
-#     # [[0x00]],  # AUTH without passcode
-#     # [[0x03]],  # Unknown command (off-by-one from CLOSE)
-#     # [[0xFF]],  # Invalid command (maximum value)
+#     [[0x00]],  # AUTH without passcode
+#     [[0x03]],  # Unknown command (off-by-one from CLOSE)
+#     [[0xFF]],  # Invalid command (maximum value)
 #     [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
 # ]
+SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
+
+    # # SPECIAL
+    [[0x3F,0x3F,0x3F]],
+    # [[0x3F]+DEFAULT_PASSCODE]],
+    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x01],[0x0A],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],],
+    [AUTH + DEFAULT_PASSCODE,OPEN,[0x0A],CLOSE],
+    [OPEN , CLOSE],            # Open then Close
+    # Command sequences in a single frame
+    [OPEN , CLOSE],            # Open then Close
+    [CLOSE , OPEN],            # Close then Open
+    [OPEN , OPEN],             # Open twice
+    [CLOSE , CLOSE],           # Close twice
+    [[0x0A],[0xFF]*4],
+    
+    
+    
+    
+    # Complex state transition sequences
+    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
+    [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
+    
+    # Double authentication scenarios (potential bugs)
+    [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
+    
+    # Full sequences
+    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
+    # Basic protocol tests
+    [AUTH + DEFAULT_PASSCODE],  # Valid authentication
+    [OPEN],                     # Open command
+    [CLOSE],                    # Close command
+    
+    # State transition sequences
+    [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
+    [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
+    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
+    
+    
+    # Basic protocol tests
+    [AUTH + DEFAULT_PASSCODE],  # Valid authentication
+    [OPEN],                     # Open command
+    [CLOSE],                    # Close command
+    
+    # State transition sequences
+    [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
+    [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
+    
+    
+    
+    # Edge cases exploration
+    [[0x00]],  # AUTH without passcode
+    [[0x03]],  # Unknown command (off-by-one from CLOSE)
+    [[0xFF]],  # Invalid command (maximum value)
+    
+    [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
+
+    [[0x3F]],
+    [[0xAA]],
+    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
+    [AUTH + WRONG_PASSCODE , OPEN],  # Auth + Open
+    [AUTH + WRONG_PASSCODE , CLOSE], # Auth + Close
+    [[0xFF]*4],  # Invalid command (maximum value)
+    [[0xAA,0xAA]],
+    
+    [AUTH + DEFAULT_PASSCODE , OPEN+CLOSE],  # Auth + Open
+    [[0x04],[0x04],[0x04],[0x04],[0x04]],
+    [[0x0B]],
+]
 
 #  ================= Global variables ================= 
 response_codes_seen = set()
@@ -237,8 +271,8 @@ def is_interesting(
         seen_combinations.add(hash_pair)
         return True
 
-    if len(seed.data) > 5:
-        return True
+    # if len(seed.data) > 5:
+    #     return True
 
     return False
 
@@ -254,12 +288,12 @@ def assign_path_weights(seed: Seed) -> float:
         return 0.2
 
     # Moderate: unique non-zero response (unexpected behavior)
-    if seed.response and seed.response[0] != 0x00:
-        return 0.3
+    # if seed.response and seed.response[0] != 0x00:
+    #     return 0.3
 
     # Medium-low: long sequences could trigger latent state bugs
-    if len(seed.data) > 5:
-        return 0.5
+    # if len(seed.data) > 5:
+    #     return 0.5
 
     # Default interesting priority
     return 1.0
@@ -377,11 +411,22 @@ async def main():
     logging_seed = Seed(
         priority=1.0,
         energy=1.0,
-        data=[AUTH + DEFAULT_PASSCODE],
-        path_hash=str(ble_connection_count),
+        data=[],
+        path_hash=str(ble_connection_count), ## Use connection count as path hash
         mutation_note="Logging seed",
         logs=[]
     )
+
+    
+
+    # logging_seed = Seed(
+    #     priority=1.0,
+    #     energy=1.0,
+    #     data=[AUTH + DEFAULT_PASSCODE],
+    #     path_hash=str(ble_connection_count),
+    #     mutation_note="Logging seed",
+    #     logs=[]
+    # )
 
     # print("\n[2] Authenticating...")
     # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)
@@ -419,21 +464,21 @@ async def main():
             # for _ in range(1):  # Run mutations once for each seed
                 
                 # Controlled randomness
-                custom_rng = random.Random(117)  # Use a fixed seed for reproducibility  
+                custom_rng = random.Random(52)  # Use a fixed seed for reproducibility  
                 mutated_data = mutate_input(current_seed)
                 # Run mutation
                 mutated_data = mutate_input(
                     current_seed,
                     mutation_weights={
-                        'command_flip': 0.8,
-                        'sequence_shuffle': 0.1,
-                        'command_insert': 0.05,
-                        'sequence_duplicate': 0.05
+                        'command_flip': 0.1,
+                        'sequence_shuffle': 0.3,
+                        'command_insert': 0.1,
+                        'sequence_duplicate': 0.5
                     },
-                    bitflip_range=(1, 15),
-                    truncation_prob=0.1,
+                    bitflip_range=(1, 255),
+                    truncation_prob=0,
                     extension_prob=0.2,
-                    max_extend_bytes=3,
+                    max_extend_bytes=10,
                     rng=custom_rng
                 )
                 
@@ -477,8 +522,9 @@ async def main():
                       
                         mutated_seed.number_of_commands_executed += 1
 
+
                         response = await ble.write_command(command)                             
-                        await asyncio.sleep(1)
+                        # await asyncio.sleep(1)
 
                         mutated_seed.response = bytes(response)
                         mutated_seed.response_hash = hashlib.sha256(mutated_seed.response).hexdigest()
@@ -543,7 +589,11 @@ async def main():
                     await asyncio.sleep(1)
                     # Get a new logging_seed
                     ble_connection_count += 1
-                    logging_seed = Seed(timestamp=time.time(), logs=[], priority=1.0, energy=1.0, data=[AUTH + DEFAULT_PASSCODE],path_hash=str(ble_connection_count), mutation_note="Logging seed")
+                    logging_seed = Seed(timestamp=time.time(), logs=[], priority=1.0, energy=1.0, data=[],path_hash=str(ble_connection_count), mutation_note="Logging seed")
+
+
+
+                    # logging_seed = Seed(timestamp=time.time(), logs=[], priority=1.0, energy=1.0, data=[AUTH + DEFAULT_PASSCODE],path_hash=str(ble_connection_count), mutation_note="Logging seed")
 
                     # print("\n[2] Authenticating...")
                     # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)

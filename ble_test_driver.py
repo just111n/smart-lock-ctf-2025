@@ -8,16 +8,20 @@ from fuzzer_class import Fuzzer
 from BLEClient import BLEClient
 from utils import Seed
 
-# ========================== DEVICE & COMMAND SETUP ==========================
 
+# ========================= BLE DEVICE CONFIG ========================
 DEVICE_NAME = "Smart Lock [Group 7]"
 
-AUTH = [0x00]
-OPEN = [0x01]
-CLOSE = [0x02]
-DEFAULT_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]
+# ========================== COMMAND SETUP ==========================
 
-EXPECTED_RESPONSES = [[0x00], [0x01], [0x02], [0x03], [0x04]]
+
+
+AUTH:List[int] = [0x00]
+OPEN:List[int] = [0x01]
+CLOSE:List[int] = [0x02]
+DEFAULT_PASSCODE:List[int] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]
+
+EXPECTED_RESPONSES:List[List[int]] = [[0x00], [0x01], [0x02], [0x03], [0x04]]
 
 SEED_COMMAND_SEQUENCES = [
     [[0xAA, 0xAA]],                           # Special

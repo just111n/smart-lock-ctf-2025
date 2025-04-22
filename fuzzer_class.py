@@ -153,7 +153,7 @@ class Fuzzer:
 
         # ========================== LOGGING AFTER FUZZER ENDS ==========================
         print("Getting Logs from target...")
-        lines = self.target.get_logs()  # Return a list of all log lines.
+        lines = self.target.get_logs()  # Return a list of all log lines, change for target, analysis
         await asyncio.sleep(1)
         await self.target.teardown()
         print("Target teardown complete...")
