@@ -94,8 +94,10 @@ WRONG_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07] # Wrong passcode
 SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
     # # SPECIAL
-    [[0x00]*256],
-    [AUTH + DEFAULT_PASSCODE + [0x00]*249]
+    # [AUTH+DEFAULT_PASSCODE],
+     [AUTH + WRONG_PASSCODE,OPEN], # Auth + Open + Close
+       # [AUTH + DEFAULT_PASSCODE + [0xF1]*247]
+    # [AUTH + DEFAULT_PASSCODE + [0xF1]*247]
     # [[0x01]*255],
     # [[0x02]*255],
     # [[0x03]*255],
@@ -536,7 +538,7 @@ async def main():
                         mutated_seed.execution_count = 1
 
                         mutated_seed.logs.append(f"Received: {[hex(b) for b in response]}")
-                        logging_seed.logs.append(f"Received: {[hex(b) for b in command]}")
+                        logging_seed.logs.append(f"Received: {[hex(b) for b in response]}")
 
                                 
                         mutated_seed.error_code = response
@@ -566,7 +568,7 @@ async def main():
                         mutated_seed.priority = assign_path_weights(mutated_seed)
 
                         lines = ble.read_logs()
-                        save_to("interesting", mutated_seed, lines[-1])
+                        # save_to("interesting", mutated_seed, lines[-1])
                         heapq.heappush(seed_queue, mutated_seed)
 
 
