@@ -94,74 +94,75 @@ WRONG_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07] # Wrong passcode
 SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
     # # SPECIAL
-    [[0x00]*255],
-    [[0x01]*255],
-    [[0x02]*255],
-    [[0x03]*255],
-    [[0x04]*255],
-    # [[0x3F]+DEFAULT_PASSCODE]],
-    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x01],[0x0A],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],],
-    [AUTH + DEFAULT_PASSCODE,OPEN,[0x0A],CLOSE],
-    [OPEN , CLOSE],            # Open then Close
-    # Command sequences in a single frame
-    [OPEN , CLOSE],            # Open then Close
-    [CLOSE , OPEN],            # Close then Open
-    [OPEN , OPEN],             # Open twice
-    [CLOSE , CLOSE],           # Close twice
-    [[0x0A],[0xFF]*4],
+    [[0x00]*256],
+    [AUTH + DEFAULT_PASSCODE + [0x00]*249]
+    # [[0x01]*255],
+    # [[0x02]*255],
+    # [[0x03]*255],
+    # [[0x04]*255],
+    # # [[0x3F]+DEFAULT_PASSCODE]],
+    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x01],[0x0A],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],],
+    # [AUTH + DEFAULT_PASSCODE,OPEN,[0x0A],CLOSE],
+    # [OPEN , CLOSE],            # Open then Close
+    # # Command sequences in a single frame
+    # [OPEN , CLOSE],            # Open then Close
+    # [CLOSE , OPEN],            # Close then Open
+    # [OPEN , OPEN],             # Open twice
+    # [CLOSE , CLOSE],           # Close twice
+    # [[0x0A],[0xFF]*4],
     
     
     
     
-    # Complex state transition sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
-    [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
+    # # Complex state transition sequences
+    # [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
+    # [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
     
-    # Double authentication scenarios (potential bugs)
-    [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
+    # # Double authentication scenarios (potential bugs)
+    # [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
     
-    # Full sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
-    # Basic protocol tests
-    [AUTH + DEFAULT_PASSCODE],  # Valid authentication
-    [OPEN],                     # Open command
-    [CLOSE],                    # Close command
+    # # Full sequences
+    # [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
+    # # Basic protocol tests
+    # [AUTH + DEFAULT_PASSCODE],  # Valid authentication
+    # [OPEN],                     # Open command
+    # [CLOSE],                    # Close command
     
-    # State transition sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
-    [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
-    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
-    
-    
-    # Basic protocol tests
-    [AUTH + DEFAULT_PASSCODE],  # Valid authentication
-    [OPEN],                     # Open command
-    [CLOSE],                    # Close command
-    
-    # State transition sequences
-    [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
-    [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
+    # # State transition sequences
+    # [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
+    # [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
+    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
     
     
+    # # Basic protocol tests
+    # [AUTH + DEFAULT_PASSCODE],  # Valid authentication
+    # [OPEN],                     # Open command
+    # [CLOSE],                    # Close command
     
-    # Edge cases exploration
-    [[0x00]],  # AUTH without passcode
-    [[0x03]],  # Unknown command (off-by-one from CLOSE)
-    [[0xFF]],  # Invalid command (maximum value)
+    # # State transition sequences
+    # [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
+    # [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
     
-    [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
+    
+    
+    # # Edge cases exploration
+    # [[0x00]],  # AUTH without passcode
+    # [[0x03]],  # Unknown command (off-by-one from CLOSE)
+    # [[0xFF]],  # Invalid command (maximum value)
+    
+    # [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
 
-    [[0x3F]],
-    [[0xAA]],
-    [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
-    [AUTH + WRONG_PASSCODE , OPEN],  # Auth + Open
-    [AUTH + WRONG_PASSCODE , CLOSE], # Auth + Close
-    [[0xFF]*4],  # Invalid command (maximum value)
-    [[0xAA,0xAA]],
+    # [[0x3F]],
+    # [[0xAA]],
+    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
+    # [AUTH + WRONG_PASSCODE , OPEN],  # Auth + Open
+    # [AUTH + WRONG_PASSCODE , CLOSE], # Auth + Close
+    # [[0xFF]*4],  # Invalid command (maximum value)
+    # [[0xAA,0xAA]],
     
-    [AUTH + DEFAULT_PASSCODE , OPEN+CLOSE],  # Auth + Open
-    [[0x04],[0x04],[0x04],[0x04],[0x04]],
-    [[0x0B]],
+    # [AUTH + DEFAULT_PASSCODE , OPEN+CLOSE],  # Auth + Open
+    # [[0x04],[0x04],[0x04],[0x04],[0x04]],
+    # [[0x0B]],
 ]
 
 #  ================= Global variables ================= 
@@ -460,7 +461,7 @@ async def main():
             print(f"{'='*25} Seed Input {seed_input_count} {'='*25}")
 
             # TODO: randomize Energy function
-            energy = assign_energy(current_seed, exponential_energy)
+            energy = assign_energy(current_seed, inverse_energy)
 
 
             # Run multiple mutations on each mutated seed based on energy
@@ -473,17 +474,17 @@ async def main():
                 # Run mutation
                 mutated_data = mutate_input(
                     current_seed,
-                    mutation_weights={
-                        'command_flip': 0.1,
-                        'sequence_shuffle': 0.3,
-                        'command_insert': 0.1,
-                        'sequence_duplicate': 0.5
-                    },
-                    bitflip_range=(1, 255),
-                    truncation_prob=0,
-                    extension_prob=0.2,
-                    max_extend_bytes=10,
-                    rng=custom_rng
+                    # mutation_weights={
+                    #     'command_flip': 0.1,
+                    #     'sequence_shuffle': 0.3,
+                    #     'command_insert': 0.1,
+                    #     'sequence_duplicate': 0.5
+                    # },
+                    # bitflip_range=(1, 255),
+                    # truncation_prob=0,
+                    # extension_prob=0.2,
+                    # max_extend_bytes=10,
+                    # rng=custom_rng
                 )
                 
 
