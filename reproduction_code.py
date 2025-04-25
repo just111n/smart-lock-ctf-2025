@@ -30,15 +30,7 @@ async def example_control_smartlock():
 
         await ble.write_command([0, 1, 2, 3, 4, 5, 6])
         await asyncio.sleep(2)
-        await ble.write_command([0, 1, 2, 3, 4])
-        await asyncio.sleep(2)
-        await ble.write_command([1])
-        await asyncio.sleep(2)
-        await ble.write_command([1])
-        await asyncio.sleep(2)
-        await ble.write_command([2])
-        await asyncio.sleep(2)
-        await ble.write_command([0, 1, 2, 3, 4, 5, 6])
+        await ble.write_command([0, 175, 1, 2, 3, 4, 5, 107, 55])
         await asyncio.sleep(2)
 
         
@@ -59,15 +51,7 @@ async def example_control_smartlock():
 
         await ble.write_command([0, 1, 2, 3, 4, 5, 6])
         await asyncio.sleep(2)
-        await ble.write_command([0, 1, 2, 3, 4])
-        await asyncio.sleep(2)
-        await ble.write_command([1])
-        await asyncio.sleep(2)
-        await ble.write_command([1])
-        await asyncio.sleep(2)
-        await ble.write_command([2])
-        await asyncio.sleep(2)
-        await ble.write_command([0, 1, 2, 3, 4, 5, 6])
+        await ble.write_command([0, 175, 1, 2, 3, 4, 5, 107, 55])
         await asyncio.sleep(2)
 
         

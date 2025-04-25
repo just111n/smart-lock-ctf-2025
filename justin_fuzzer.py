@@ -93,78 +93,80 @@ WRONG_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07] # Wrong passcode
 # ]
 SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
-    # # SPECIAL
-    # [AUTH+DEFAULT_PASSCODE],
-     [AUTH + WRONG_PASSCODE,OPEN], # Auth + Open + Close
-       # [AUTH + DEFAULT_PASSCODE + [0xF1]*247]
-    # [AUTH + DEFAULT_PASSCODE + [0xF1]*247]
-    # [[0x01]*255],
-    # [[0x02]*255],
-    # [[0x03]*255],
-    # [[0x04]*255],
-    # # [[0x3F]+DEFAULT_PASSCODE]],
-    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x01],[0x0A],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x01],[0x01],[0x02],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x0A],[0x0A],[0xFF, 0xFF, 0xFF, 0xFF],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],],
-    # [AUTH + DEFAULT_PASSCODE,OPEN,[0x0A],CLOSE],
-    # [OPEN , CLOSE],            # Open then Close
-    # # Command sequences in a single frame
-    # [OPEN , CLOSE],            # Open then Close
-    # [CLOSE , OPEN],            # Close then Open
-    # [OPEN , OPEN],             # Open twice
-    # [CLOSE , CLOSE],           # Close twice
-    # [[0x0A],[0xFF]*4],
-    
-    
-    
-    
-    # # Complex state transition sequences
-    # [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
-    # [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
-    
-    # # Double authentication scenarios (potential bugs)
-    # [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
-    
-    # # Full sequences
-    # [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
-    # # Basic protocol tests
-    # [AUTH + DEFAULT_PASSCODE],  # Valid authentication
-    # [OPEN],                     # Open command
-    # [CLOSE],                    # Close command
-    
-    # # State transition sequences
-    # [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
-    # [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
-    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
-    
-    
-    # # Basic protocol tests
-    # [AUTH + DEFAULT_PASSCODE],  # Valid authentication
-    # [OPEN],                     # Open command
-    # [CLOSE],                    # Close command
-    
-    # # State transition sequences
-    # [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
-    # [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
-    
-    
-    
-    # # Edge cases exploration
-    # [[0x00]],  # AUTH without passcode
-    # [[0x03]],  # Unknown command (off-by-one from CLOSE)
-    # [[0xFF]],  # Invalid command (maximum value)
-    
-    # [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
 
-    # [[0x3F]],
-    # [[0xAA]],
-    # [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x02],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06]],
-    # [AUTH + WRONG_PASSCODE , OPEN],  # Auth + Open
-    # [AUTH + WRONG_PASSCODE , CLOSE], # Auth + Close
-    # [[0xFF]*4],  # Invalid command (maximum value)
-    # [[0xAA,0xAA]],
-    
-    # [AUTH + DEFAULT_PASSCODE , OPEN+CLOSE],  # Auth + Open
-    # [[0x04],[0x04],[0x04],[0x04],[0x04]],
-    # [[0x0B]],
+    [AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     OPEN,OPEN,OPEN],
+
+    # tttttt
+     [[0xFF] * 8,[0xFF] * 8],
+
+    # 001675
+    [AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,],
+
+     # s7a8dj
+     [[0x03, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],],
+
+     # 010203
+     [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],
+     [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],],
+
+     # ASDJH$
+     [[0x01] * 256],
+
+     # asnmdb
+     [[0xAA,0xAA ],
+     OPEN,[0xAA,0xAA ],
+     OPEN,[0xAA,0xAA ],
+     OPEN],
+
+     # 3948472
+    [ [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
+    [ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02]],
+
+     
+
+     # ??????
+     [[0x3F,0x3F,0x3F,0x3F,0x3F]],
+
+     # KSMS&H
+     [[0x00,0x01,0x02,0x03,0x04,0x05,0x06,0xCF,0xCF]],
+
+
+     # 018374
+     [[0x00]*255,
+     AUTH+DEFAULT_PASSCODE,[0x00]*255,
+     AUTH+DEFAULT_PASSCODE,],
+
+     # disable servo
+     [[0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A]],
+
+     # enable servo
+     [[0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B]],
+
+
 ]
 
 #  ================= Global variables ================= 
@@ -424,26 +426,6 @@ async def main():
         logs=[]
     )
 
-    
-
-    # logging_seed = Seed(
-    #     priority=1.0,
-    #     energy=1.0,
-    #     data=[AUTH + DEFAULT_PASSCODE],
-    #     path_hash=str(ble_connection_count),
-    #     mutation_note="Logging seed",
-    #     logs=[]
-    # )
-
-    # print("\n[2] Authenticating...")
-    # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)
-    # if res[0] != 0:
-    #     print(f"[X] Failure: Wrong Passcode.")
-    #     await ble.disconnect()
-    #     return
-    
-
-    
 
     print("Starting BLE Fuzzer...")
 
@@ -476,12 +458,12 @@ async def main():
                 # Run mutation
                 mutated_data = mutate_input(
                     current_seed,
-                    # mutation_weights={
-                    #     'command_flip': 0.1,
-                    #     'sequence_shuffle': 0.3,
-                    #     'command_insert': 0.1,
-                    #     'sequence_duplicate': 0.5
-                    # },
+                    mutation_weights={
+                        'command_flip': 0.1,
+                        'sequence_shuffle': 0.4,
+                        'command_insert': 0.3,
+                        'sequence_duplicate': 0.2
+                    },
                     # bitflip_range=(1, 255),
                     # truncation_prob=0,
                     # extension_prob=0.2,
@@ -552,12 +534,7 @@ async def main():
                             
                             break
 
-                                # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)
-                                # await asyncio.sleep(2)
-                                # if res[0] != 0:
-                                #     print(f"[X] Failure: Wrong Passcode.")
-                                #     await ble.disconnect()
-                                #     return
+            
                                     
                             
                     if is_interesting(mutated_seed, seen_combinations, response_codes_seen):
@@ -600,25 +577,12 @@ async def main():
 
 
 
-                    # logging_seed = Seed(timestamp=time.time(), logs=[], priority=1.0, energy=1.0, data=[AUTH + DEFAULT_PASSCODE],path_hash=str(ble_connection_count), mutation_note="Logging seed")
-
-                    # print("\n[2] Authenticating...")
-                    # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)
-                    # if res[0] != 0:
-                    #     print(f"[X] Failure: Wrong Passcode.")
-                    #     await ble.disconnect()
-                    #     return
+                    
 
                     continue
 
                 
-                # print("\nTesting Authentication...")
-                # logging_seed.logs.append(f"Received: {[hex(b) for b in command]}")
-                # res = await ble.write_command(AUTH + DEFAULT_PASSCODE)
-                # await asyncio.sleep(1)
-                # print(f"Authentication Response: {res}\n")
-                # if res[0] != 0:
-                #     print(f"Authentication Fails with correct passcode.")
+                
                     
                         
 

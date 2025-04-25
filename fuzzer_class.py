@@ -8,7 +8,7 @@ import time
 import random
 from typing import List, Optional, Set, Tuple
 
-from ble_mutator_copy import mutate_input
+# from ble_mutator_copy import mutate_input
 from utils import (
     Seed,
     # is_error, is_interesting,
@@ -97,8 +97,15 @@ class Fuzzer:
             for _ in range(1): # only mutate once, assignEnergy and energy of seed does not affect fuzzing
             # for _ in range(max(1, int(energy * 5))):
                 rng = random.Random(117)
-                # mutated_data = mutate_input(current_seed, rng=rng)
-                mutated_data = current_seed.data.copy() # comment for no mutations
+                mutated_data = self.target.mutate_input(current_seed, 
+                    # mutation_weights=None,
+                    # bitflip_range=(1, 255),
+                    # truncation_prob=0.1,
+                    # extension_prob=0.1,
+                    # max_extend_bytes=50,
+                    # rng=rng
+                )
+                # mutated_data = current_seed.data.copy() # comment for no mutations
 
 
                 flat_bytes = bytes([b for cmd in mutated_data for b in cmd])

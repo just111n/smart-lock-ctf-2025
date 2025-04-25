@@ -21,7 +21,7 @@ async def example_control_smartlock():
     await ble.connect(DEVICE_NAME)
 
     print("\n[2] Authenticating...")
-    res = await ble.write_command(PASSCODE + AUTH)
+    res = await ble.write_command(bytearray(AUTH + PASSCODE))
     if res[0] != 0:
         print(f"[X] Failure: Wrong Passcode.")
         await ble.disconnect()
@@ -31,15 +31,14 @@ async def example_control_smartlock():
     await asyncio.sleep(2)
 
     print("\n[3] Opening")
-    res = await ble.write_command(OPEN+CLOSE)
-    # res = await ble.write_command(CLOSE)
+    res = await ble.write_command(bytearray("whatsgoingon", "utf-8"))
     await asyncio.sleep(2)
 
-    # print("\n[4] Closing")
-    # res = await ble.write_command(CLOSE)
-    # await asyncio.sleep(2)
+    print("\n[4] Closing")
+    res = await ble.write_command(bytearray(CLOSE))
+    await asyncio.sleep(2)
 
-    
+   
 
     print("\n[5] Disconnecting...")
     await ble.disconnect()
