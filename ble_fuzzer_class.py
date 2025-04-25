@@ -244,6 +244,9 @@ def create_seed_from_command(data: List[List[int]], note: str = "") -> Seed:
     )
 
 
+# ------------------------------
+# Assign Energy Functions
+# ------------------------------
 
 def inverse_energy(count: int) -> float:
         """Inverse energy function: energy decreases with more executions."""
@@ -489,11 +492,11 @@ class BLEFuzzer(AFLFuzzer):
 
         # Default mutation weights
         weights = mutation_weights or {
-            'command_flip': 0.3,
-            'command_insert': 0.15,
+            'command_flip': 0.4,
+            'command_insert': 0.2,
             # 'command_delete': 0.15,
-            'sequence_shuffle': 0.1,
-            'sequence_duplicate': 0.15,
+            'sequence_shuffle': 0.2,
+            'sequence_duplicate': 0.2,
             # 'sequence_remove': 0.15,
         }
 
