@@ -8,8 +8,7 @@ from typing import List, Optional, Set, Tuple,Dict
 import sys
 
 from BLEClient import BLEClient
-from ble_mutator_copy import mutate_input
-from utils import Seed, create_seed_from_command, inverse_energy
+from seed_class import Seed
 from afl_fuzzer_abstract_class import AFLFuzzer  
 
 # === Constants ===
@@ -218,6 +217,45 @@ def save_to(folder: str, seed:Seed, ble_last_log:str) -> None:
         f.write("        print(\"\\nProgram Exited by User!\")\n")
         f.write("```\n")
 
+def create_seed_from_command(data: List[List[int]], note: str = "") -> Seed:
+    """
+    Create a Seed from a 2D BLE command sequence.
+    - Each command is a list of bytes.
+    - The whole sequence is a list of such commands.
+    """
+
+    # Flatten the 2D command list into a 1D byte sequence
+    flattened = []
+    for cmd in data:
+        flattened.extend(cmd)
+
+    flat_bytes = bytes(flattened)
+
+    # Compute path hash from the command sequence only (no response yet)
+    path_hash = hashlib.sha256(flat_bytes).hexdigest()
+
+    return Seed(
+        priority=0.1,
+        energy=1.0,
+        data=data,
+        path_hash=path_hash,
+        mutation_note=note,
+        logs=[f"Generated from DEFAULT_COMMAND_SEQUENCES at {time.ctime()}"]
+    )
+
+
+
+def inverse_energy(count: int) -> float:
+        """Inverse energy function: energy decreases with more executions."""
+        return 1.0 / (count + 1)
+    
+def exponential_energy(count: int) -> float:
+    """Exponential energy function: energy drops exponentially."""
+    return 0.9 ** count
+    
+def linear_energy(count: int) -> float:
+    """Linear energy function: energy drops linearly."""
+    return max(0.1, 1.0 - (count * 0.1))
 # ------------------------------
 # Helper Functions for Mutation
 # ------------------------------
@@ -499,12 +537,12 @@ class BLEFuzzer(AFLFuzzer):
 
                 energy = self.assign_energy(current_seed, inverse_energy)
 
-                # TODO
+                
                 for _ in range(max(1, int(energy * 5))):
                 # for _ in range(1):  # Run mutations once for each seed
 
-                    # TODO
-                    mutated_data = mutate_input(current_seed)
+                    
+                    mutated_data = self.mutate_input(current_seed)
                     flattened = [b for cmd in mutated_data for b in cmd]
                     flat_bytes = bytes(flattened)
                     path_hash = hashlib.sha256(flat_bytes).hexdigest()
@@ -529,6 +567,7 @@ class BLEFuzzer(AFLFuzzer):
                             if self.is_error(mutated_seed, command, response,self.expected_responses):
                                 mutated_seed.is_error_detected = True
                                 self.failure_queue.append(mutated_seed)
+                                save_to("bugs", mutated_seed, lines[-1])
                                 break
 
                         if self.is_interesting(mutated_seed,self.seen_combinations,self.response_codes_seen):
