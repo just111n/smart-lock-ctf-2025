@@ -163,18 +163,60 @@ def save_to(folder: str, seed:Seed, ble_last_log:str) -> None:
 
         f.write("\n--- Reproduction Code ---\n")
         f.write("```python\n")
+        f.write("#!/usr/bin/env python3\n")
+        f.write("import sys\n")
+        f.write("import asyncio\n")
         f.write("from BLEClient import BLEClient\n")
-        f.write("ble = BLEClient()\n")
-        f.write("ble.init_logs()\n")
-        f.write(f"await ble.connect(\"{DEVICE_NAME}\")\n")
-        f.write(f"# Re-send command sequence\n")
+        f.write("from UserInterface import ShowUserInterface\n\n")
+
+        f.write(f"DEVICE_NAME = \"{DEVICE_NAME}\"\n")
+        f.write("# Commands\n")
+        f.write("AUTH = [0x00]\n")
+        f.write("OPEN = [0x01]\n")
+        f.write("CLOSE = [0x02]\n")
+        f.write("PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]\n\n")
+
+        # Format command sequence
+        f.write("COMMAND_SEQUENCE = [\n")
         for cmd in seed.data:
-            f.write(f"await ble.write_command({cmd})\n")
-            f.write(f"await asyncio.sleep(2)\n")      
-        f.write("logs = ble.read_logs()\n")
-        f.write("for log in logs:\n")
-        f.write("    print(log)\n")
+            formatted_cmd = ", ".join(f"0x{b:02X}" for b in cmd)
+            f.write(f"    [{formatted_cmd}],\n")
+        f.write("]\n\n")
+
+        f.write("async def control_smartlock():\n")
+        f.write("    ble = BLEClient()\n")
+        f.write("    ble.init_logs()\n")
+        f.write("    print(f'[1] Connecting to \"{DEVICE_NAME}\"...')\n")
+        f.write("    await ble.connect(DEVICE_NAME)\n\n")
+
+        f.write("    try:\n")
+        f.write("        print(\"\\n[3] Sending Commands to Smart Lock...\")\n")
+        f.write("        for command in COMMAND_SEQUENCE:\n")
+        f.write("            res = await ble.write_command(command)\n")
+        f.write("            await asyncio.sleep(1)\n")
+        f.write("    except Exception as e:\n")
+        f.write("        print(f\"Exception caught: {e}\")\n")
+        f.write("        await ble.disconnect()\n")
+        f.write("        lines = ble.read_logs()\n")
+        f.write("        for line in lines:\n")
+        f.write("            print(line)\n")
+        f.write("        sys.exit(0)\n\n")
+
+        f.write("    print(\"\\n[6] Logs from Smart Lock (Serial Port):\\n\" + '-'*50)\n")
+        f.write("    lines = ble.read_logs()\n")
+        f.write("    for line in lines:\n")
+        f.write("        print(line)\n")
+        f.write("    sys.exit(0)\n\n")
+
+        f.write("if len(sys.argv) > 1 and sys.argv[1] == \"--gui\":\n")
+        f.write("    ShowUserInterface()\n")
+        f.write("else:\n")
+        f.write("    try:\n")
+        f.write("        asyncio.run(control_smartlock())\n")
+        f.write("    except KeyboardInterrupt:\n")
+        f.write("        print(\"\\nProgram Exited by User!\")\n")
         f.write("```\n")
+
 
 class BLEFuzzer:
     def __init__(self, 
@@ -380,9 +422,14 @@ class BLEFuzzer:
                                 self.failure_queue.append(mutated_seed)
                                 break
 
-                        # if self.is_interesting(mutated_seed):
-                        #     mutated_seed.is_interesting = True
-                        #     heapq.heappush(self.seed_queue, mutated_seed)
+                        if self.is_interesting(mutated_seed,self.seen_combinations,self.response_codes_seen):
+                            mutated_seed.is_interesting = True
+                            mutated_seed.logs.append("🌟 Interesting seed: new behavior or output")
+                            # Assign priority based on how interesting it is
+                            mutated_seed.priority = self.assign_path_weights(mutated_seed)
+                            lines = self.ble.read_logs()
+                            save_to("interesting", mutated_seed, lines[-1])
+                            heapq.heappush(self.seed_queue, mutated_seed)
 
                     except Exception as e:
                         # To catch errors that crash the fuzzer
@@ -468,6 +515,62 @@ class BLEFuzzer:
                     f.write(f"\nLogs:\n")
                     for log in failed_seed.logs:
                         f.write(f"{log}\n")
+
+                    f.write("\n--- Reproduction Code ---\n")
+                    f.write("```python\n")
+                    f.write("#!/usr/bin/env python3\n")
+                    f.write("import sys\n")
+                    f.write("import asyncio\n")
+                    f.write("from BLEClient import BLEClient\n")
+                    f.write("from UserInterface import ShowUserInterface\n\n")
+
+                    f.write(f"DEVICE_NAME = \"{DEVICE_NAME}\"\n")
+                    f.write("# Commands\n")
+                    f.write("AUTH = [0x00]\n")
+                    f.write("OPEN = [0x01]\n")
+                    f.write("CLOSE = [0x02]\n")
+                    f.write("PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]\n\n")
+
+                    # Format command sequence
+                    f.write("COMMAND_SEQUENCE = [\n")
+                    for cmd in failed_seed.data:
+                        formatted_cmd = ", ".join(f"0x{b:02X}" for b in cmd)
+                        f.write(f"    [{formatted_cmd}],\n")
+                    f.write("]\n\n")
+
+                    f.write("async def control_smartlock():\n")
+                    f.write("    ble = BLEClient()\n")
+                    f.write("    ble.init_logs()\n")
+                    f.write("    print(f'[1] Connecting to \"{DEVICE_NAME}\"...')\n")
+                    f.write("    await ble.connect(DEVICE_NAME)\n\n")
+
+                    f.write("    try:\n")
+                    f.write("        print(\"\\n[3] Sending Commands to Smart Lock...\")\n")
+                    f.write("        for command in COMMAND_SEQUENCE:\n")
+                    f.write("            res = await ble.write_command(command)\n")
+                    f.write("            await asyncio.sleep(1)\n")
+                    f.write("    except Exception as e:\n")
+                    f.write("        print(f\"Exception caught: {e}\")\n")
+                    f.write("        await ble.disconnect()\n")
+                    f.write("        lines = ble.read_logs()\n")
+                    f.write("        for line in lines:\n")
+                    f.write("            print(line)\n")
+                    f.write("        sys.exit(0)\n\n")
+
+                    f.write("    print(\"\\n[6] Logs from Smart Lock (Serial Port):\\n\" + '-'*50)\n")
+                    f.write("    lines = ble.read_logs()\n")
+                    f.write("    for line in lines:\n")
+                    f.write("        print(line)\n")
+                    f.write("    sys.exit(0)\n\n")
+
+                    f.write("if len(sys.argv) > 1 and sys.argv[1] == \"--gui\":\n")
+                    f.write("    ShowUserInterface()\n")
+                    f.write("else:\n")
+                    f.write("    try:\n")
+                    f.write("        asyncio.run(control_smartlock())\n")
+                    f.write("    except KeyboardInterrupt:\n")
+                    f.write("        print(\"\\nProgram Exited by User!\")\n")
+                    f.write("```\n")
 
         sys.exit(0)
 
