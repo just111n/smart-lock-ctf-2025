@@ -30,74 +30,74 @@ EXPECTED_RESPONSES = [[0x00], [0x01], [0x02], [0x03], [0x04]]
 SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
 
-    [AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     AUTH+WRONG_PASSCODE,
-     OPEN,OPEN,OPEN],
+    # [AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  AUTH+WRONG_PASSCODE,
+    #  OPEN,OPEN,OPEN],
 
-    # tttttt
-     [[0xFF] * 8,[0xFF] * 8],
+    # # tttttt
+    #  [[0xFF] * 8,[0xFF] * 8],
 
-    # 001675
-    [AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,
-     AUTH+DEFAULT_PASSCODE,],
+    # # 001675
+    # [AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,
+    #  AUTH+DEFAULT_PASSCODE,],
 
-     # s7a8dj
-     [[0x03, 0x7D, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],],
+    #  # s7a8dj
+    #  [[0x03, 0x7D, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],],
 
-     # 010203
-     [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],
-     [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],],
+    #  # 010203
+    #  [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],
+    #  [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],],
 
-     # ASDJH$
-     [[0x01] * 256],
+    #  # ASDJH$
+    #  [[0x01] * 256],
 
-     # asnmdb
-     [[0xAA,0xAA ],
-     OPEN,[0xAA,0xAA ],
-     OPEN,[0xAA,0xAA ],
-     OPEN],
+    #  # asnmdb
+    #  [[0xAA,0xAA ],
+    #  OPEN,[0xAA,0xAA ],
+    #  OPEN,[0xAA,0xAA ],
+    #  OPEN],
 
-     # 3948472
-    [ [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
-    [ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02]],
+    #  # 3948472
+    # [ [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
+    # [ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02]],
 
      
 
-     # ??????
-     [[0x3F,0x3F,0x3F,0x3F,0x3F]],
+    #  # ??????
+    #  [[0x3F,0x3F,0x3F,0x3F,0x3F]],
 
-     # KSMS&H
-     [[0x00,0x01,0x02,0x03,0x04,0x05,0x06,0xCF,0xCF]],
+    #  # KSMS&H
+    #  [[0x00,0x01,0x02,0x03,0x04,0x05,0x06,0xCF,0xCF]],
 
 
-     # 018374
-     [[0x00]*255,
-     AUTH+DEFAULT_PASSCODE,[0x00]*255,
-     AUTH+DEFAULT_PASSCODE,],
+    #  # 018374
+    #  [[0x00]*255,
+    #  AUTH+DEFAULT_PASSCODE,[0x00]*255,
+    #  AUTH+DEFAULT_PASSCODE,],
 
-     # disable servo
-     [[0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A]],
+    #  # disable servo
+    #  [[0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A]],
 
      # enable servo
      [[0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B]],
@@ -124,7 +124,7 @@ def save_to(folder: str, seed:Seed, ble_last_log:str) -> None:
 
     with open(path, "w", encoding="utf-8") as f:
 
-        f.write(f"=== Fuzzed BLE Input ===\n")
+        f.write(f"=== Seed Data ===\n")
 
         # Write the raw 2D command data
         f.write(f"\n--- 2D Command Sequence ---\n")
@@ -151,6 +151,8 @@ def save_to(folder: str, seed:Seed, ble_last_log:str) -> None:
         f.write(f"Response        : {[f'0x{b:02X}' for b in seed.response]}\n")
         f.write(f"Response Hash   : {seed.response_hash}\n")
         f.write(f"number_of_commands_executed: {seed.number_of_commands_executed}\n")
+        f.write(f"Is all commands executed: {seed.is_all_commands_executed}\n")
+        f.write(f"Is Seed Interesting: {seed.is_interesting}\n")
         
       
 
@@ -543,7 +545,7 @@ class BLEFuzzer(AFLFuzzer):
                 self.seed_input_count += 1
                 print(f"{'='*25} Seed Input {self.seed_input_count} {'='*25}")
 
-                energy = self.assign_energy(current_seed, inverse_energy)
+                energy = self.assign_energy(current_seed, exponential_energy)
 
                 
                 for _ in range(max(1, int(energy * 5))):
@@ -567,6 +569,9 @@ class BLEFuzzer(AFLFuzzer):
                             mutated_seed.logs.append(f"Sent: {[hex(b) for b in command]}")
                             self.logging_seed.logs.append(f"Sent: {[hex(b) for b in command]}")
 
+                            mutated_seed.number_of_commands_executed += 1
+                            self.logging_seed.number_of_commands_executed += 1
+
                             response = await self.ble.write_command(command)
                             mutated_seed.response = bytes(response)
                             mutated_seed.response_hash = hashlib.sha256(mutated_seed.response).hexdigest()
@@ -577,6 +582,8 @@ class BLEFuzzer(AFLFuzzer):
                                 self.failure_queue.append(mutated_seed)
                                 save_to("bugs", mutated_seed, lines[-1])
                                 break
+
+                        mutated_seed.is_all_commands_executed = True
 
                         if self.is_interesting(mutated_seed,self.seen_combinations,self.response_codes_seen):
                             mutated_seed.is_interesting = True
@@ -593,6 +600,7 @@ class BLEFuzzer(AFLFuzzer):
                         mutated_seed.logs.append(f"BLE Crashed!")
                         self.logging_seed.logs.append(f"BLE Crashed!")
                         self.logging_seed.is_error_detected = True
+                        self.logging_seed.is_all_commands_executed = True
                         self.failure_queue.append(self.logging_seed)
 
                         lines = self.ble.read_logs()
@@ -635,7 +643,7 @@ class BLEFuzzer(AFLFuzzer):
                 summary.write("=== BLE Fuzzer Coverage Summary ===\n")
                 summary.write(f"Timestamp                  : {time.ctime()}\n")
                 summary.write(f"No. of Initial Seed Inputs : {len(self.seed_inputs)}\n")
-                summary.write(f"No. of seeds               : {self.seed_input_count}\n")
+                summary.write(f"No. of seeds processed     : {self.seed_input_count}\n")
                 summary.write(f"No. of mutated seeds       : {self.mutated_seed_count}\n")
                 summary.write(f"BLE connections made       : {self.ble_connection_count}\n")
                 summary.write(f"Unique path-response pairs : {len(self.seen_combinations)}\n")
