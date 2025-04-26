@@ -15,6 +15,7 @@ from afl_fuzzer_abstract_class import AFLFuzzer
 DEVICE_NAME = "Smart Lock [Group 7]"
 CRASH_DIR = "crashes"
 INTERESTING_DIR = "interesting"
+NUMBER_OF_SEEDS_TESTED = 100
 
 
 # === Commands ===
@@ -333,14 +334,14 @@ class BLEFuzzer(AFLFuzzer):
         os.makedirs(self.interesting_dir, exist_ok=True)
 
         self.ble = BLEClient()
-        self.seeds = [create_seed_from_command(seq, note=f"Seed #{i}")
+        self.seed_inputs = [create_seed_from_command(seq, note=f"Seed #{i}")
                       for i, seq in enumerate(seed_sequences)]
         
-        super().__init__(self.seeds)
+        super().__init__(self.seed_inputs)
 
         
-        print(f"Found {len(self.seeds)} seed inputs.")
-        for seed in self.seeds:
+        print(f"Found {len(self.seed_inputs)} seed inputs.")
+        for seed in self.seed_inputs:
             heapq.heappush(self.seed_queue, seed)
 
     async def connect_ble(self):
@@ -529,10 +530,14 @@ class BLEFuzzer(AFLFuzzer):
         print("Starting BLE Fuzzer...")
 
         try:
-            while self.seed_queue:
+            while self.seed_queue and self.seed_input_count < NUMBER_OF_SEEDS_TESTED:
                 current_seed = self.choose_next()
                 if not current_seed:
                     print("No more seeds to test.")
+                    break
+
+                if self.seed_input_count == NUMBER_OF_SEEDS_TESTED:
+                    print(f"{NUMBER_OF_SEEDS_TESTED} seeds have been tested.")
                     break
 
                 self.seed_input_count += 1
@@ -621,22 +626,16 @@ class BLEFuzzer(AFLFuzzer):
                 for line in lines:
                     f.write(line + "\n")
 
-            print(f"No. of seed inputs processed: {self.seed_input_count}")
-            print(f"No. of mutated seeds processed: {self.mutated_seed_count}")
-            # Print out my global variables
-            print(f"BLE connection count: {self.ble_connection_count}")
-            print(f"Seen combinations: {len(self.seen_combinations)}")
-            print(f"Seen response codes: {len(self.response_codes_seen)}")
-            print(self.response_codes_seen)
-            print(f"seedqueue length: {len(self.seed_queue)}")
-            print(f"failure_queue length: {len(self.failure_queue)}")
+            
+            print(f"Coverage Summary saved to 'test_coverage_summary.txt'")
             
             # make a file that contains all the error and analysis
                     # Save statistics to a separate test analysis coverage summary file
             with open("test_coverage_summary.txt", "w", encoding="utf-8") as summary:
                 summary.write("=== BLE Fuzzer Coverage Summary ===\n")
                 summary.write(f"Timestamp                  : {time.ctime()}\n")
-                summary.write(f"No. of seed inputs         : {self.seed_input_count}\n")
+                summary.write(f"No. of Initial Seed Inputs : {len(self.seed_inputs)}\n")
+                summary.write(f"No. of seeds               : {self.seed_input_count}\n")
                 summary.write(f"No. of mutated seeds       : {self.mutated_seed_count}\n")
                 summary.write(f"BLE connections made       : {self.ble_connection_count}\n")
                 summary.write(f"Unique path-response pairs : {len(self.seen_combinations)}\n")
