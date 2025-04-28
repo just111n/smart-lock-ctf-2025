@@ -21,6 +21,7 @@ class Seed:
     mutation_note: str = field(default="", compare=False)
     logs: List[str] = field(default_factory=list, compare=False)  # BLE comms/debug logs
     number_of_commands_executed: int = field(default=0, compare=False)  # Number of commands executed in this seed
+    is_all_commands_executed: bool = field(default=False, compare=False)  # True if all commands in this seed have been executed
 
     id:str = field(default_factory=lambda: str(int(time.time() * 1000)), compare=False)
 

@@ -15,7 +15,7 @@ from afl_fuzzer_abstract_class import AFLFuzzer
 DEVICE_NAME = "Smart Lock [Group 7]"
 CRASH_DIR = "crashes"
 INTERESTING_DIR = "interesting"
-NUMBER_OF_SEEDS_TESTED = 100
+NUMBER_OF_SEEDS_TESTED = 50
 
 
 # === Commands ===
@@ -27,81 +27,117 @@ WRONG_PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07]
 
 EXPECTED_RESPONSES = [[0x00], [0x01], [0x02], [0x03], [0x04]]
 
+# SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
+#     # Basic protocol tests
+#     [AUTH + DEFAULT_PASSCODE],  # Valid authentication
+#     [OPEN],                     # Open command
+#     [CLOSE],                    # Close command
+    
+#     # State transition sequences
+#     [AUTH + DEFAULT_PASSCODE , OPEN],  # Auth + Open
+#     [AUTH + DEFAULT_PASSCODE , CLOSE], # Auth + Close
+    
+#     # Command sequences in a single frame
+#     [OPEN , CLOSE],            # Open then Close
+#     [CLOSE , OPEN],            # Close then Open
+#     [OPEN , OPEN],             # Open twice
+#     [CLOSE , CLOSE],           # Close twice
+    
+#     # Complex state transition sequences
+#     [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE], # Auth + Open + Close
+#     [AUTH + DEFAULT_PASSCODE , CLOSE , OPEN], # Auth + Close + Open
+    
+#     # Double authentication scenarios (potential bugs)
+#     [AUTH + DEFAULT_PASSCODE , AUTH + DEFAULT_PASSCODE],
+    
+#     # Full sequences
+#     [AUTH + DEFAULT_PASSCODE , OPEN , CLOSE , OPEN , CLOSE],
+    
+#     # Edge cases exploration
+#     [[0x00]],  # AUTH without passcode
+#     [[0x03]],  # Unknown command (off-by-one from CLOSE)
+#     [[0xFF]],  # Invalid command (maximum value)
+#     [AUTH + DEFAULT_PASSCODE[:3]],  # AUTH with incomplete passcode
+# ]
+
 SEED_COMMAND_SEQUENCES:List[List[List[int]]] = [
 
 
-    # [AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  AUTH+WRONG_PASSCODE,
-    #  OPEN,OPEN,OPEN],
+    [AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     AUTH+WRONG_PASSCODE,
+     OPEN,OPEN,OPEN],
 
-    # # tttttt
-    #  [[0xFF] * 8,[0xFF] * 8],
+    # tttttt
+     [[0xFF] * 8,[0xFF] * 8],
 
-    # # 001675
-    # [AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,
-    #  AUTH+DEFAULT_PASSCODE,],
+    
 
-    #  # s7a8dj
-    #  [[0x03, 0x7D, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
-    #  [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],],
+     # s7a8dj
+     [[0x03, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],
+     [0x03, 0x7D, 0x7D, 0x8C, 0x2C, 0x8C, 0x2C],],
 
-    #  # 010203
-    #  [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],
-    #  [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],],
+     # 010203
+     [[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],
+     [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],[0x01],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x07],],
 
     #  # ASDJH$
-    #  [[0x01] * 256],
+     [[0x01] * 256],
 
     #  # asnmdb
-    #  [[0xAA,0xAA ],
-    #  OPEN,[0xAA,0xAA ],
-    #  OPEN,[0xAA,0xAA ],
-    #  OPEN],
+     [[0xAA,0xAA ],
+     OPEN,[0xAA,0xAA ],
+     OPEN,[0xAA,0xAA ],
+     OPEN],
 
-    #  # 3948472
-    # [ [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
-    # [ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02]],
+     # 3948472
+    [ [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
+    [ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02],[ 0x01, 0x02]],
 
      
 
-    #  # ??????
-    #  [[0x3F,0x3F,0x3F,0x3F,0x3F]],
+     # ??????
+     [[0x3F,0x3F,0x3F,0x3F,0x3F]],
 
-    #  # KSMS&H
-    #  [[0x00,0x01,0x02,0x03,0x04,0x05,0x06,0xCF,0xCF]],
+     # KSMS&H
+     [[0x00,0x01,0x02,0x03,0x04,0x05,0x06,0xCF,0xCF]],
 
 
-    #  # 018374
-    #  [[0x00]*255,
-    #  AUTH+DEFAULT_PASSCODE,[0x00]*255,
-    #  AUTH+DEFAULT_PASSCODE,],
+     # 018374
+     [[0x00]*255,
+     AUTH+DEFAULT_PASSCODE,[0x00]*255,
+     AUTH+DEFAULT_PASSCODE,],
 
-    #  # disable servo
-    #  [[0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A]],
+     # disable servo
+     [[0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A]],
 
      # enable servo
      [[0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B]],
 
+     # 001675
+    [AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,
+     AUTH+DEFAULT_PASSCODE,],
+
+    
 
 ]
 
@@ -238,7 +274,7 @@ def create_seed_from_command(data: List[List[int]], note: str = "") -> Seed:
     path_hash = hashlib.sha256(flat_bytes).hexdigest()
 
     return Seed(
-        priority=0.1,
+        priority=0.1, # highest priority 
         energy=1.0,
         data=data,
         path_hash=path_hash,
@@ -331,6 +367,7 @@ class BLEFuzzer(AFLFuzzer):
         self.logging_seed = None
         self.seed_input_count = 0
         self.mutated_seed_count = 0
+        self.interesting_count = 0
 
         os.makedirs(self.crash_dir, exist_ok=True)
         os.makedirs(self.interesting_dir, exist_ok=True)
@@ -372,22 +409,12 @@ class BLEFuzzer(AFLFuzzer):
         seed.energy = energy_function(seed.execution_count)
         
         energy = seed.energy
-        # Adjust energy based on path weight if available
-        # if seed.path_hash in self.path_tracker.path_weights:
-        #     path_weight = self.path_tracker.path_weights[seed.path_hash]
-        #     energy *= path_weight
+        
         
         # Seeds that led to crashes get extra energy
         if seed.is_error_detected:
             energy *= 3.0
         
-        # Seeds with error response codes get extra energy
-        if seed.response and seed.response[0] != 0:
-            energy *= 1.5
-        
-        # Prioritize complex command sequences
-        if len(seed.data) > 2:
-            energy *= 1.2
             
         return energy
 
@@ -417,7 +444,6 @@ class BLEFuzzer(AFLFuzzer):
             self,
         seed: Seed,
         seen_combinations: Set[Tuple[str, str]],
-        response_codes_seen: Set[int],
     ) -> bool:
         """
         Determines if a seed is 'interesting' based on:
@@ -429,23 +455,14 @@ class BLEFuzzer(AFLFuzzer):
         response_hash = seed.response_hash
         hash_pair = (path_hash, response_hash)
 
-        
-
-        if seed.response:
-            status = seed.response[0]
-            
-            if status not in response_codes_seen:
-                response_codes_seen.add(status)
-                return True
             
         if hash_pair not in seen_combinations:
-            seen_combinations.add(hash_pair)
+            seen_combinations.add(hash_pair) 
             return True
 
-        # if len(seed.data) > 5:
-        #     return True
-
         return False
+
+    
     
     def assign_path_weights(self,seed: Seed) -> float:
         
@@ -455,16 +472,19 @@ class BLEFuzzer(AFLFuzzer):
         """
 
         # Highest priority: if it caused an error or crash
-        if seed.response not in self.response_codes_seen:
+        # but seed inputs have the highest priority of 0.1
+        if seed.response[0] not in self.response_codes_seen:
             return 0.2
 
         # Moderate: unique non-zero response (unexpected behavior)
         # if seed.response and seed.response[0] != 0x00:
         #     return 0.3
 
-        # Medium-low: long sequences could trigger latent state bugs
-        # if len(seed.data) > 5:
-        #     return 0.5
+        
+        
+        # invalid command response code have the least priority to be tested
+        if seed.response[0] == 0x02:
+            return 2.0
 
         # Default interesting priority
         return 1.0
@@ -482,7 +502,7 @@ class BLEFuzzer(AFLFuzzer):
         extension_prob: float = 0.1,
         max_extend_bytes: int = 50,
         rng: Optional[random.Random] = None
-    ) -> List[List[int]]:
+    ) -> Tuple[List[List[int]], str]:
         """
         Controlled mutation of a 2D list of BLE commands.
         """
@@ -504,18 +524,19 @@ class BLEFuzzer(AFLFuzzer):
         }
 
         mutation_type = rng.choices(list(weights.keys()), weights=list(weights.values()), k=1)[0]
-        seed.mutation_note = mutation_type
 
         if mutation_type == 'command_flip':
             flip_random_byte(rng.choice(mutated_sequence), rng, bitflip_range)
         elif mutation_type == 'command_insert':
             insert_random_byte(rng.choice(mutated_sequence), rng)
-        # elif mutation_type == 'command_delete':
-        #     delete_random_byte(rng.choice(mutated_sequence), rng)
+        
         elif mutation_type == 'sequence_shuffle':
             shuffle_commands(mutated_sequence, rng)
         elif mutation_type == 'sequence_duplicate':
             duplicate_command(mutated_sequence, rng)
+
+        # elif mutation_type == 'command_delete':
+        #     delete_random_byte(rng.choice(mutated_sequence), rng)
         # elif mutation_type == 'sequence_remove':
         #     remove_random_command(mutated_sequence, rng)
 
@@ -525,7 +546,7 @@ class BLEFuzzer(AFLFuzzer):
         if rng.random() < extension_prob:
             extend_last_command(mutated_sequence, rng, max_extend_bytes)
 
-        return mutated_sequence
+        return mutated_sequence, mutation_type
 
     async def fuzz(self):
         await self.connect_ble()
@@ -552,14 +573,14 @@ class BLEFuzzer(AFLFuzzer):
                 # for _ in range(1):  # Run mutations once for each seed
 
                     
-                    mutated_data = self.mutate_input(current_seed)
+                    mutated_data, mutation_note  = self.mutate_input(current_seed)
                     flattened = [b for cmd in mutated_data for b in cmd]
                     flat_bytes = bytes(flattened)
                     path_hash = hashlib.sha256(flat_bytes).hexdigest()
 
                     mutated_seed = Seed(priority=1.0, energy=energy, data=mutated_data,
                                          parent_hash=current_seed.path_hash, path_hash=path_hash,
-                                         mutation_note="mutation", timestamp=time.time(), logs=[])
+                                         mutation_note=mutation_note, timestamp=time.time(), logs=[])
 
                     self.mutated_seed_count += 1
                     print(f"Starting Mutated Seed {self.mutated_seed_count} Sequence")
@@ -568,24 +589,33 @@ class BLEFuzzer(AFLFuzzer):
                         for command in mutated_seed.data:
                             mutated_seed.logs.append(f"Sent: {[hex(b) for b in command]}")
                             self.logging_seed.logs.append(f"Sent: {[hex(b) for b in command]}")
+                            self.logging_seed.data.append(command)
+
 
                             mutated_seed.number_of_commands_executed += 1
                             self.logging_seed.number_of_commands_executed += 1
 
                             response = await self.ble.write_command(command)
+                            if response[0] not in self.response_codes_seen:
+                                self.response_codes_seen.add(response[0])
+                                print("🦸 New Response code seen")
+
                             mutated_seed.response = bytes(response)
                             mutated_seed.response_hash = hashlib.sha256(mutated_seed.response).hexdigest()
                             mutated_seed.logs.append(f"Received: {[hex(b) for b in response]}")
+                            self.logging_seed.logs.append(f"Received: {[hex(b) for b in response]}")
 
                             if self.is_error(mutated_seed, command, response,self.expected_responses):
                                 mutated_seed.is_error_detected = True
                                 self.failure_queue.append(mutated_seed)
+                                lines = self.ble.read_logs()
                                 save_to("bugs", mutated_seed, lines[-1])
                                 break
 
                         mutated_seed.is_all_commands_executed = True
 
-                        if self.is_interesting(mutated_seed,self.seen_combinations,self.response_codes_seen):
+                        if self.is_interesting(mutated_seed,self.seen_combinations):
+                            self.interesting_count += 1
                             mutated_seed.is_interesting = True
                             mutated_seed.logs.append("🌟 Interesting seed: new behavior or output")
                             # Assign priority based on how interesting it is
@@ -646,11 +676,17 @@ class BLEFuzzer(AFLFuzzer):
                 summary.write(f"No. of seeds processed     : {self.seed_input_count}\n")
                 summary.write(f"No. of mutated seeds       : {self.mutated_seed_count}\n")
                 summary.write(f"BLE connections made       : {self.ble_connection_count}\n")
-                summary.write(f"Unique path-response pairs : {len(self.seen_combinations)}\n")
+                summary.write(f"Unique combinations        : {len(self.seen_combinations)}\n")
                 summary.write(f"Unique response codes      : {len(self.response_codes_seen)}\n")
                 summary.write(f"Response codes seen        : {sorted(self.response_codes_seen)}\n")
                 summary.write(f"Remaining seeds in queue   : {len(self.seed_queue)}\n")
                 summary.write(f"Failure queue size         : {len(self.failure_queue)}\n")
+                summary.write(f"Number of Interesting      : {self.interesting_count}\n")
+
+                summary.write(f"\nSeen Combinations:\n")
+
+                for combination in self.seen_combinations:
+                    summary.write(f"{combination}\n")
 
             # Save failure seeds individually into "failureQueue/" folder
             os.makedirs("failureQueue", exist_ok=True)
@@ -667,7 +703,7 @@ class BLEFuzzer(AFLFuzzer):
                     f.write(f"Priority        : {failed_seed.priority:.4f}\n")
                     f.write(f"Energy          : {failed_seed.energy:.4f}\n")
                     f.write(f"Mutation Note   : {failed_seed.mutation_note}\n")
-                    f.write(f"Commands Sent   :\n")
+                    f.write(f"Commands Sent   : {failed_seed.data}\n")
                     for cmd in failed_seed.data:
                         f.write(f"  {[f'0x{b:02X}' for b in cmd]}\n")
                     f.write(f"\nLogs:\n")
