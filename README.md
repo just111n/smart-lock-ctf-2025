@@ -4,6 +4,8 @@
 ./fuzz.bat
 ```
 
+Best fuzzer is ble_fuzzer_class.py
+
 ## Result Folders Explained
 
 logging/initial_seed/: Contains raw seed files and logs showing which commands from the initial corpus led to crashes.
