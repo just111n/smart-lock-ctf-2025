@@ -12,6 +12,10 @@ CLOSE = [0x02]  # 1 Byte
 PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]  # Correct PASSCODE
 # PASSCODE = [0x01, 0x02, 0x03, 0x04, 0x05, 0x07] # Wrong PASSCODE
 
+# COMMAND = AUTH + PASSCODE + OPEN
+# COMMAND = [0xAA,0xAA]
+COMMAND = [0xAA, 0xAA]
+
 async def example_control_smartlock():
     # Use this code as template to create your fuzzer
     ble = BLEClient()
@@ -20,30 +24,36 @@ async def example_control_smartlock():
     print(f'[1] Connecting to "{DEVICE_NAME}"...')
     await ble.connect(DEVICE_NAME)
 
-    print("\n[2] Authenticating...")
-    res = await ble.write_command(PASSCODE + AUTH)
-    if res[0] != 0:
-        print(f"[X] Failure: Wrong Passcode.")
-        await ble.disconnect()
-        return
+    # print("\n[2] Authenticating...")
+    # res = await ble.write_command(AUTH + PASSCODE)
+    # if res[0] != 0:
+    #     print(f"[X] Failure: Wrong Passcode.")
+    #     await ble.disconnect()
+    #     return
 
-    print("[!] Authenticated!!!")
-    await asyncio.sleep(2)
-
-    print("\n[3] Opening")
-    res = await ble.write_command(OPEN+CLOSE)
-    # res = await ble.write_command(CLOSE)
-    await asyncio.sleep(2)
-
-    # print("\n[4] Closing")
-    # res = await ble.write_command(CLOSE)
+    # print("[!] Authenticated!!!")
     # await asyncio.sleep(2)
 
+    
+    # ====== commands to test ===========
+    await ble.write_command([0, 1, 2, 3, 4, 5, 6])
+    await asyncio.sleep(2)
+    await ble.write_command([0, 6, 2, 3, 4, 5, 6])
+    await asyncio.sleep(2)
+    await ble.write_command([1])
+    await asyncio.sleep(2)
+    await ble.write_command([0, 6, 2, 3, 4, 5, 6])
+    await asyncio.sleep(2)
+
+ 
+    
     
 
     print("\n[5] Disconnecting...")
     await ble.disconnect()
 
+
+    # ======= Print logs =======
     print(f"\n[6] Logs from Smart Lock (Serial Port):\n{'-'*50}")
     lines = ble.read_logs()  # Return a list of all log lines.
     for line in lines:

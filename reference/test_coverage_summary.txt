@@ -1,0 +1,10 @@
+=== BLE Fuzzer Coverage Summary ===
+Timestamp                  : Fri Apr 25 04:43:33 2025
+No. of seed inputs         : 173
+No. of mutated seeds       : 415
+BLE connections made       : 59
+Unique path-response pairs : 326
+Unique response codes      : 6
+Response codes seen        : [0, 1, 2, 3, 4, 255]
+Remaining seeds in queue   : 207
+Failure queue size         : 66

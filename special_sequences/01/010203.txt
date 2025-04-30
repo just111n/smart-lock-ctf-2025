@@ -1,0 +1,72 @@
+=== Fuzzed BLE Input ===
+
+--- 2D Command Sequence ---
+[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0xBA, 0x06, 0xA3],[0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0xBA, 0x06, 0xA3],[0x02, 0xBA, 0xA3],[0x02, 0xBA, 0xA3],[0x02, 0xBA],[0x01, 0xA3],[0x02, 0xBA],[0x01, 0xA3],[0x00, 0x01, 0x02, 0xBA, 0x03, 0xA3],
+
+--- BLE Log ---
+[Error] Code: 0x010203
+=== Fuzzed BLE Input ===
+Timestamp       : Mon Apr  7 03:51:57 2025
+Execution Count : 0
+Priority        : 1.0000
+Energy          : 1.0000
+Mutation Note   : Logging seed
+Parent Hash     : 
+Path Hash       : 1
+Error Detected  : True
+Error Code      : 
+Response        : []
+Response Hash   : 
+number_of_commands_executed: 0
+
+--- Seed Logs ---
+Sent: ['0x0', '0x1', '0x2', '0x3', '0x4', '0x5', '0xba', '0x6', '0xa3']
+Received: ['0x0', '0x1', '0x2', '0x3', '0x4', '0x5', '0xba', '0x6', '0xa3']
+Sent: ['0x0', '0x1', '0x2', '0x3', '0x4', '0x5', '0xba', '0x6', '0xa3']
+Received: ['0x0', '0x1', '0x2', '0x3', '0x4', '0x5', '0xba', '0x6', '0xa3']
+Sent: ['0x2', '0xba', '0xa3']
+Received: ['0x2', '0xba', '0xa3']
+Sent: ['0x2', '0xba', '0xa3']
+Received: ['0x2', '0xba', '0xa3']
+Sent: ['0x2', '0xba']
+Received: ['0x2', '0xba']
+Sent: ['0x1', '0xa3']
+Received: ['0x1', '0xa3']
+Sent: ['0x2', '0xba']
+Received: ['0x2', '0xba']
+Sent: ['0x1', '0xa3']
+Received: ['0x1', '0xa3']
+Sent: ['0x0', '0x1', '0x2', '0xba', '0x3', '0xa3']
+Error Response Received!
+
+--- Reproduction Code ---
+```python
+from BLEClient import BLEClient
+ble = BLEClient()
+ble.init_logs()
+await ble.connect("Smart Lock [Group 7]")
+# Re-send command sequence
+await ble.write_command([0, 1, 2, 3, 4, 5, 6])
+await asyncio.sleep(2)
+await ble.write_command([0, 1, 2, 3, 4, 5, 186, 6, 163])
+await asyncio.sleep(2)
+await ble.write_command([0, 1, 2, 3, 4, 5, 186, 6, 163])
+await asyncio.sleep(2)
+await ble.write_command([2, 186, 163])
+await asyncio.sleep(2)
+await ble.write_command([2, 186, 163])
+await asyncio.sleep(2)
+await ble.write_command([2, 186])
+await asyncio.sleep(2)
+await ble.write_command([1, 163])
+await asyncio.sleep(2)
+await ble.write_command([2, 186])
+await asyncio.sleep(2)
+await ble.write_command([1, 163])
+await asyncio.sleep(2)
+await ble.write_command([0, 1, 2, 186, 3, 163])
+await asyncio.sleep(2)
+logs = ble.read_logs()
+for log in logs:
+    print(log)
+```
