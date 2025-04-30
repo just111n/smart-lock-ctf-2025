@@ -15,7 +15,7 @@ from afl_fuzzer_abstract_class import AFLFuzzer
 DEVICE_NAME = "Smart Lock [Group 7]"
 CRASH_DIR = "crashes"
 INTERESTING_DIR = "interesting"
-NUMBER_OF_SEEDS_TESTED = 50
+
 
 
 # === Commands ===
@@ -403,18 +403,24 @@ class BLEFuzzer(AFLFuzzer):
         seed.execution_count += 1
         return seed
 
-    def assign_energy(self, seed: Seed,energy_function) -> float:
+    def assign_energy(self,seed: Seed,energy_function) -> float:
         """Assign energy to a seed based on how promising it seems."""
+
         # Re-compute energy based on execution count
         seed.energy = energy_function(seed.execution_count)
         
-        energy = seed.energy
-        
-        
+        energy = seed.energy        
         # Seeds that led to crashes get extra energy
         if seed.is_error_detected:
             energy *= 3.0
         
+        # Seeds with error response codes get extra energy
+        if seed.response and seed.response[0] != 0:
+            energy *= 1.5
+        
+        # Prioritize complex command sequences
+        if len(seed.data) > 2:
+            energy *= 1.2
             
         return energy
 
@@ -553,15 +559,15 @@ class BLEFuzzer(AFLFuzzer):
         print("Starting BLE Fuzzer...")
 
         try:
-            while self.seed_queue and self.seed_input_count < NUMBER_OF_SEEDS_TESTED:
+            while self.seed_queue:
                 current_seed = self.choose_next()
                 if not current_seed:
                     print("No more seeds to test.")
                     break
 
-                if self.seed_input_count == NUMBER_OF_SEEDS_TESTED:
-                    print(f"{NUMBER_OF_SEEDS_TESTED} seeds have been tested.")
-                    break
+                # if self.seed_input_count == NUMBER_OF_SEEDS_TESTED:
+                #     print(f"{NUMBER_OF_SEEDS_TESTED} seeds have been tested.")
+                #     break
 
                 self.seed_input_count += 1
                 print(f"{'='*25} Seed Input {self.seed_input_count} {'='*25}")
@@ -666,6 +672,7 @@ class BLEFuzzer(AFLFuzzer):
 
             
             print(f"Coverage Summary saved to 'test_coverage_summary.txt'")
+            print(f"BLE logs saved to 'ble_logs.txt'")
             
             # make a file that contains all the error and analysis
                     # Save statistics to a separate test analysis coverage summary file
